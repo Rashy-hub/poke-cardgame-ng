@@ -1,0 +1,13 @@
+<div class="pokemon-card">
+    <div class="card-container" [ngStyle]="{ 'background-color': backgroundColor }">
+        <div class="card-header">
+            <h2>{{ pokemon().name }}</h2>
+            <div class="card-hp-type">
+                <p>{{ pokemon().hp }} HP</p>
+                <div class="icon-container">
+                    <img class="pokemon-type-icon" [src]="pokemonTypeIcon" alt="type icon" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
