@@ -9,4 +9,8 @@ export class Pokemon {
     attackName: string = 'standard attack'
     attackStrength: number = 0
     attackDescription: string = 'attack description ...'
+
+    deepCopy(): Pokemon {
+        return structuredClone(this)
+    }
 }
