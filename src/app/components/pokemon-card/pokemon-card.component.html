@@ -9,5 +9,14 @@
                 </div>
             </div>
         </div>
+        <div class="card-content">
+            <div class="image-container">
+                <img class="pokemon-image" [src]="pokemon().image" alt="pokemon image" />
+                <p class="figure-caption">{{ pokemon().figureCaption }}</p>
+            </div>
+            <p class="attack-name">{{ pokemon().attackName }}</p>
+            <p class="attack-strength">Attack strength: {{ pokemon().attackStrength }}</p>
+            <p class="attack-description">{{ pokemon().attackDescription }}</p>
+        </div>
     </div>
 </div>
