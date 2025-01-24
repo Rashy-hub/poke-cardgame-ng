@@ -14,10 +14,23 @@ enum BackgroundColor {
     Yellow = 'rgb(255, 215, 0)', // Gold
 }
 
-const typeToBackgroundColorMap = {
-    [PokemonType.Fire]: BackgroundColor.Red,
-    [PokemonType.Water]: BackgroundColor.Blue,
-    [PokemonType.Plant]: BackgroundColor.Green,
-    [PokemonType.Electric]: BackgroundColor.Yellow,
+const PokemonTypeToIconProperties = {
+    [PokemonType.Fire]: {
+        color: BackgroundColor.Red,
+        imageUrl: 'fire_icon.png',
+    },
+    [PokemonType.Water]: {
+        color: BackgroundColor.Blue,
+        imageUrl: 'water_icon.png',
+    },
+    [PokemonType.Plant]: {
+        color: BackgroundColor.Green,
+        imageUrl: 'plant_icon.png',
+    },
+    [PokemonType.Electric]: {
+        color: BackgroundColor.Yellow,
+        imageUrl: 'electric_icon.png',
+    },
 }
-export { PokemonType, BackgroundColor, typeToBackgroundColorMap }
+
+export { PokemonType, BackgroundColor, PokemonTypeToIconProperties }
