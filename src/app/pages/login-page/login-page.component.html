@@ -1,0 +1,40 @@
+<div class="server-status">
+    Server Status :
+    <span *ngIf="status() === 'UNREACHABLE'">Veuillez patientez 60 secondes</span>
+    <span *ngIf="status() !== 'UNREACHABLE'">{{ status() }}</span>
+</div>
+
+<mat-card [formGroup]="mainForm" class="login-form">
+    <mat-card-title>Login</mat-card-title>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="username" />
+        <mat-error *ngIf="mainForm.get('username')?.hasError('required') && mainForm.get('username')?.touched"> Name is required </mat-error>
+        <mat-error *ngIf="mainForm.get('username')?.hasError('minlength') && mainForm.get('username')?.touched">
+            Name must be at least 3 characters.
+        </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Password</mat-label>
+        <input matInput formControlName="password" type="password" />
+        <mat-error *ngIf="mainForm.get('password')?.hasError('required') && mainForm.get('password')?.touched"> Password is required </mat-error>
+        <mat-error *ngIf="mainForm.get('password')?.hasError('minlength') && mainForm.get('password')?.touched">
+            Name must be at least 3 characters.
+        </mat-error>
+    </mat-form-field>
+    <mat-error *ngIf="invalidCredentails" class="error-invalid">Invalid credentials</mat-error>
+
+    <mat-card-actions>
+        <button
+            mat-flat-button
+            color="primary"
+            type="submit"
+            (click)="onSubmitForm()"
+            [disabled]="mainForm.invalid || status() === 'UNREACHABLE' || status() === 'LOADING'"
+        >
+            LOGIN
+        </button>
+    </mat-card-actions>
+</mat-card>
