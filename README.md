@@ -4,6 +4,8 @@ This project is my first small project in Angular. It is a card game based on th
 This project is based on a tutorial by **simpletech** (https://www.youtube.com/watch?v=U71TQN68QGU). I adapted their backend REST API using Django and deployed it in a web service on Render.
 Backend docs : (https://playing-cards-backend.onrender.com/api/swagger-ui/)
 
+![Game Screenshot](public/app-demo.png)
+
 # User Features:
 
 -   The user can log in and log out (no subscription yet)
