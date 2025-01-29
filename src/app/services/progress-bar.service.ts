@@ -15,7 +15,7 @@ export class ProgressBarService {
         this.simulatedProgress = 0
         this.progressInterval = setInterval(() => {
             this.simulatedProgress += 10
-            console.log(this.simulatedProgress)
+
             if (this.simulatedProgress < 90) {
                 this.progressBar.set(this.simulatedProgress)
             } else {
