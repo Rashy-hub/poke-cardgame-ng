@@ -1,6 +1,7 @@
 import { PokemonType } from '../utils/pokemon.utils'
 
 export class Pokemon {
+    id?: number = -1
     name: string = 'Pokemon'
     image: string = '/default.png'
     type: PokemonType = PokemonType.Electric
