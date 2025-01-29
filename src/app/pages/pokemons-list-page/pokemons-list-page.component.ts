@@ -1,58 +1,101 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, inject, OnInit, Signal } from '@angular/core'
 import { Pokemon } from '../../models/pokemon.model'
 import { PokemonCardComponent } from '../../components/pokemon-card/pokemon-card.component'
 import { CommonModule } from '@angular/common'
 import { PokemonType } from '../../utils/pokemon.utils'
+import { SearchBarComponent } from '../../components/search-bar/search-bar.component'
+import { PokemonService } from '../../services/pokemon.service'
+import { Router } from '@angular/router'
+
+import { MatButtonModule } from '@angular/material/button'
+import { BehaviorSubject, combineLatest, debounceTime, from, tap } from 'rxjs'
+import { LoaderComponent } from '../../components/loader/loader.component'
+import { FilterComponent } from '../../components/filter/filter.component'
+import { Options } from '../../utils/filters.utils'
+import { FilterService } from '../../services/filter.service'
+import { trigger, transition, style, stagger, animate, query } from '@angular/animations'
 
 @Component({
     selector: 'app-pokemons-list-page',
-    imports: [PokemonCardComponent, CommonModule],
+    imports: [PokemonCardComponent, CommonModule, SearchBarComponent, MatButtonModule, LoaderComponent, FilterComponent, FilterComponent],
     templateUrl: './pokemons-list-page.component.html',
     styleUrl: './pokemons-list-page.component.css',
+    animations: [
+        trigger('listAnimation', [
+            transition('* => *', [
+                query(
+                    ':enter',
+                    [
+                        style({ opacity: 0, transform: 'translateY(20px)' }),
+                        stagger('50ms', [animate('300ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))]),
+                    ],
+                    { optional: true }
+                ),
+            ]),
+        ]),
+    ],
 })
 export class PokemonsListPageComponent implements OnInit {
+    private pokemonsService = inject(PokemonService)
+    private router = inject(Router)
+    private filterService = inject(FilterService)
+
     public pokemons: Pokemon[] = []
+    public filteredPokemons: Pokemon[] = []
+    private searchTerm$ = new BehaviorSubject<string>('')
+
+    filterByType!: Options<PokemonType>
+    filterBySort!: Options<string>
+
     ngOnInit(): void {
-        let pokemon1 = new Pokemon()
-        pokemon1.name = 'Pikachu'
-        pokemon1.image = 'https://assets.pokemon.com/assets/cms2/img/pokedex/detail/025.png'
-        pokemon1.type = PokemonType.Electric
-        pokemon1.hp = 60
-        pokemon1.figureCaption = `N°${Math.floor(Math.random() * 1000)} Pikachu`
-        pokemon1.attackName = 'Thunderbolt'
-        pokemon1.attackStrength = 90
-        pokemon1.attackDescription = 'A powerful electric attack'
+        this.filterByType = {
+            label: 'Type',
+            value: Object.values(PokemonType),
+        }
+        this.filterBySort = {
+            label: 'Sort by Attack',
+            value: ['ASC', 'DESC'],
+        }
 
-        let pokemon2 = new Pokemon()
-        pokemon2.name = 'Bulbasaur'
-        pokemon2.image = 'https://assets.pokemon.com/assets/cms2/img/pokedex/detail/001.png'
-        pokemon2.type = PokemonType.Plant
-        pokemon2.hp = 45
-        pokemon2.figureCaption = `N°${Math.floor(Math.random() * 1000)} Bulbasaur`
-        pokemon2.attackName = 'Vine Whip'
-        pokemon2.attackStrength = 45
-        pokemon2.attackDescription = 'A whip-like attack with vines'
+        combineLatest([this.filterService.typeFilter$, this.filterService.attackFilter$, this.pokemonsService.getPokemons(), this.searchTerm$])
+            .pipe(
+                debounceTime(300),
+                tap((data) => console.log(data))
+            )
+            .subscribe(([type, sortDirection, pokemons, searchTerm]) => {
+                let filtered = this.applyFilters([...(pokemons as Pokemon[])], type, searchTerm)
+                this.filteredPokemons = this.applySorting(filtered, sortDirection)
+            })
+    }
 
-        let pokemon3 = new Pokemon()
-        pokemon3.name = 'Charmander'
-        pokemon3.image = 'https://assets.pokemon.com/assets/cms2/img/pokedex/detail/004.png'
-        pokemon3.type = PokemonType.Fire
-        pokemon3.hp = 39
-        pokemon3.figureCaption = `N°${Math.floor(Math.random() * 1000)} Charmander`
-        pokemon3.attackName = 'Flamethrower'
-        pokemon3.attackStrength = 90
-        pokemon3.attackDescription = 'A strong fire attack'
+    onCreatePokemon() {
+        this.router.navigateByUrl('/pokemon/create')
+    }
+    onSearchTermChange(searchTerm: string) {
+        console.log(searchTerm)
+        this.searchTerm$.next(searchTerm)
+    }
+    private normalizeString(str: string): string {
+        return str
+            .toLowerCase()
+            .trim()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+    }
 
-        let pokemon4 = new Pokemon()
-        pokemon4.name = 'Squirtle'
-        pokemon4.image = 'https://assets.pokemon.com/assets/cms2/img/pokedex/detail/007.png'
-        pokemon4.type = PokemonType.Water
-        pokemon4.hp = 44
-        pokemon4.figureCaption = `N°${Math.floor(Math.random() * 1000)} Squirtle`
-        pokemon4.attackName = 'Water Gun'
-        pokemon4.attackStrength = 40
-        pokemon4.attackDescription = 'A basic water attack'
+    private applyFilters(pokemons: Pokemon[], type: string, searchTerm: string): Pokemon[] {
+        const normalizedSearch = this.normalizeString(searchTerm)
 
-        this.pokemons = [pokemon1, pokemon2, pokemon3, pokemon4]
+        return pokemons.filter((pokemon) => {
+            const typeMatch = !type || pokemon.type === type
+            const searchMatch = this.normalizeString(pokemon.name).includes(normalizedSearch)
+            return typeMatch && searchMatch
+        })
+    }
+
+    private applySorting(pokemons: Pokemon[], direction: string): Pokemon[] {
+        return [...pokemons].sort((a, b) => {
+            return direction === 'ASC' ? a.attackStrength - b.attackStrength : b.attackStrength - a.attackStrength
+        })
     }
 }

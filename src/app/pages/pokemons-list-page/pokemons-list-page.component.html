@@ -1,3 +1,14 @@
-<div class="list-container">
-    <app-pokemon-card *ngFor="let pokemon of pokemons" [pokemon]="pokemon"></app-pokemon-card>
-</div>
+<main class="main">
+    <div class="ui-container">
+        <app-search-bar (searchClicked)="onSearchTermChange($event)"></app-search-bar>
+        <button class="create-pokemon-button" mat-raised-button (click)="onCreatePokemon()">Add Pokemon</button>
+    </div>
+    <div class="filter-container">
+        <app-filter [options]="filterByType" [context]="'filter'"></app-filter>
+        <app-filter [options]="filterBySort" [context]="'sort'"></app-filter>
+    </div>
+    <div class="list-container" [@listAnimation]="filteredPokemons.length">
+        <app-loader></app-loader>
+        <app-pokemon-card *ngFor="let pokemon of filteredPokemons" [pokemon]="pokemon"></app-pokemon-card>
+    </div>
+</main>
