@@ -1,0 +1,31 @@
+.search-bar {
+    width: 400px;
+
+    display: flex;
+    margin: 50px auto;
+    background-color: rgb(240, 240, 240);
+    flex-direction: row;
+    align-items: center;
+    box-shadow: lightgray 4px 4px 20px;
+    overflow: hidden;
+    border-radius: 40px;
+    border: 1px solid lightgray;
+}
+.search-bar input {
+    all: unset;
+    padding: 20px;
+    flex-grow: 1;
+}
+.search-bar button {
+    width: 50px;
+    padding: 8px;
+    border: none;
+    border-radius: 40px;
+}
+.search-bar button:hover {
+    cursor: pointer;
+}
+.search-icon {
+    width: 100%;
+    object-fit: cover;
+}

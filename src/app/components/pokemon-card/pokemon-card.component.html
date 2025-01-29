@@ -1,4 +1,11 @@
-<div class="pokemon-card">
+<div
+    class="pokemon-card"
+    (click)="onSelectPokemon()"
+    [@cardAnimation]
+    [@hoverAnimation]="hoverState"
+    (mouseenter)="hoverState = 'hovered'"
+    (mouseleave)="hoverState = 'normal'"
+>
     <div class="card-container" [ngStyle]="{ 'background-color': backgroundColor }">
         <div class="card-header">
             <h2>{{ pokemon().name }}</h2>
@@ -11,12 +18,19 @@
         </div>
         <div class="card-content">
             <div class="image-container">
-                <img class="pokemon-image" [src]="pokemon().image" alt="pokemon image" />
+                <div class="pokemon-image"><img class="pokemon-image" [src]="pokemon().image" alt="pokemon image" /></div>
+
                 <p class="figure-caption">{{ pokemon().figureCaption }}</p>
             </div>
-            <p class="attack-name">{{ pokemon().attackName }}</p>
-            <p class="attack-strength">Attack strength: {{ pokemon().attackStrength }}</p>
-            <p class="attack-description">{{ pokemon().attackDescription }}</p>
+            <div class="attack-container">
+                <div class="attack">
+                    <div class="attack-cost"><img src="electric_icon.png" alt="" /><img src="electric_icon.png" alt="" /></div>
+                    <p class="attack-name">{{ pokemon().attackName }}</p>
+                    <p class="attack-strength">{{ pokemon().attackStrength }}</p>
+                </div>
+
+                <p class="attack-description">{{ pokemon().attackDescription }}</p>
+            </div>
         </div>
     </div>
 </div>

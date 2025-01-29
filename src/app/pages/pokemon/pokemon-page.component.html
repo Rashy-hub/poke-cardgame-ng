@@ -1,0 +1,97 @@
+<div class="main">
+    <mat-card class="preview">
+        <app-pokemon-card [pokemon]="pokemon"></app-pokemon-card>
+    </mat-card>
+
+    <mat-card *ngIf="pokemonForm" [formGroup]="pokemonForm" class="pokemon-form">
+        <mat-card-title>Créer un Pokémon</mat-card-title>
+
+        <mat-card class="form-card">
+            <mat-card-subtitle class="form-card-title">Informations de base</mat-card-subtitle>
+            <div class="form-row">
+                <mat-form-field appearance="fill">
+                    <mat-label>Name</mat-label>
+                    <input matInput formControlName="name" />
+                    <mat-error *ngIf="pokemonForm.get('name')?.hasError('required') && pokemonForm.get('name')?.touched">
+                        Name is required
+                    </mat-error>
+                    <mat-error *ngIf="pokemonForm.get('name')?.hasError('minlength') && pokemonForm.get('name')?.touched">
+                        Name must be at least 3 characters.
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                    <mat-label>Image URL</mat-label>
+                    <input matInput formControlName="image" />
+                    <mat-error *ngIf="pokemonForm.get('image')?.hasError('required') && pokemonForm.get('image')?.touched">
+                        Image URL is required.
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" *ngIf="pokemonForm.get('image')?.value">
+                    <mat-label>Figure caption</mat-label>
+                    <input matInput formControlName="figureCaption" />
+                    <mat-error *ngIf="pokemonForm.get('figureCaption')?.hasError('required') && pokemonForm.get('image')?.touched">
+                        Image URL is required.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </mat-card>
+
+        <mat-card class="form-card">
+            <mat-card-subtitle class="form-card-title">Type et statistiques</mat-card-subtitle>
+            <div class="form-row">
+                <mat-form-field appearance="fill">
+                    <mat-label>Type</mat-label>
+                    <mat-select formControlName="type">
+                        <mat-option *ngFor="let type of pokemonTypes" [value]="type">
+                            {{ type }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                    <mat-label>HP</mat-label>
+                    <input matInput type="number" formControlName="hp" />
+                    <mat-error *ngIf="pokemonForm.get('hp')?.hasError('required') && pokemonForm.get('hp')?.touched"> HP is required. </mat-error>
+                    <mat-error *ngIf="pokemonForm.get('hp')?.hasError('min') && pokemonForm.get('hp')?.touched">
+                        HP must be a positive number.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </mat-card>
+
+        <mat-card class="form-card">
+            <mat-card-subtitle class="form-card-title">Attaque</mat-card-subtitle>
+            <mat-form-field appearance="fill">
+                <mat-label>Attack Name</mat-label>
+                <input matInput formControlName="attackName" />
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Attack Strength</mat-label>
+                <input matInput type="number" formControlName="attackStrength" />
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Attack Description</mat-label>
+                <input matInput formControlName="attackDescription" />
+            </mat-form-field>
+        </mat-card>
+
+        <mat-card-actions class="button-actions">
+            <button
+                mat-raised-button
+                color="primary"
+                type="submit"
+                [disabled]="pokemonForm.invalid"
+                (click)="onSubmit()"
+                [innerText]="isUpdatePokemon ? 'Update Pokemon' : 'Create Pokemon'"
+            ></button>
+            <div class="button-group">
+                <button mat-raised-button color="primary" type="menu" (click)="goBack()">Go back</button>
+                <button mat-stroked-button color="warn" *ngIf="isUpdatePokemon" (click)="deletePokemon()">Delete</button>
+            </div>
+        </mat-card-actions>
+    </mat-card>
+</div>

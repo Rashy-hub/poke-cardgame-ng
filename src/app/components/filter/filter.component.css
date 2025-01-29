@@ -1,0 +1,11 @@
+.filter-container {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.type-filter {
+    margin: auto;
+    width: 200px;
+}

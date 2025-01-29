@@ -1,0 +1,13 @@
+<header>
+    <h1>Pokémon Card Game</h1>
+
+    <div *ngIf="userStatus() as user; else loggedOut" class="user-status">
+        <p class="user-name">{{ user.user | fullName }}</p>
+        <button class="login-button" (click)="logout()">Logout</button>
+    </div>
+</header>
+<div class="progress-bar" [style.width.%]="progressBar()"><div class="progress-bar-fill"></div></div>
+
+<ng-template #loggedOut>
+    <button class="login-button" (click)="login()">Login</button>
+</ng-template>
